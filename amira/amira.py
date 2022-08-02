@@ -104,9 +104,9 @@ class AMIRA(object):
             # SQS queue to prevent the same exception from happening in the
             # future.
             logging.warning(
-                'Unexpected error while running the Analyze Filter for the '
-                'object {}: {}'.format(created_object.key_name, exc),
+                f'Unexpected error while running the Analyze Filter for the object {created_object.key_name}: {exc}'
             )
+
         try:
             self._data_processor.upload_results(
                 created_object.key_name[:-7], self._results_uploader,

@@ -40,9 +40,7 @@ class SqsHandler(object):
         """
         sqs_connection = boto3.resource('sqs', region_name=region_name)
         self.sqs_queue = sqs_connection.get_queue_by_name(QueueName=queue_name)
-        logging.info(
-            'Successfully connected to {} SQS queue'.format(queue_name),
-        )
+        logging.info(f'Successfully connected to {queue_name} SQS queue')
 
     def get_created_objects(self):
         """Retrieves the S3 event notifications about the objects
@@ -55,9 +53,7 @@ class SqsHandler(object):
         )
         if messages:
             for message in messages:
-                objects_created = self._retrieve_created_objects_from_message(message)
-                for object_created in objects_created:
-                    yield object_created
+                yield from self._retrieve_created_objects_from_message(message)
                 message.delete()
 
     def _retrieve_created_objects_from_message(self, message):

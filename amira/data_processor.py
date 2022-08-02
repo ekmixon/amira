@@ -49,17 +49,18 @@ class DataProcessor(object):
         :param file_basename: Basename used to generate output filenames (prepended)
         :param result_uploaders: List of Uploader objects to invoke
         """
-        results = [
-            FileMetaInfo(file_basename + res.name, res.content, res.content_type) for res in self._results
-            if isinstance(res, FileMetaInfo) and DataProcessor.get_buffer_size(res.content) > 0
-        ]
-        if results:
+        if results := [
+            FileMetaInfo(file_basename + res.name, res.content, res.content_type)
+            for res in self._results
+            if isinstance(res, FileMetaInfo)
+            and DataProcessor.get_buffer_size(res.content) > 0
+        ]:
             for res_uploader in result_uploaders:
                 for res in results:
                     res.content.seek(0)
                 res_uploader.upload_results(results)
         else:
-            logging.warning('No results to upload for {}'.format(file_basename))
+            logging.warning(f'No results to upload for {file_basename}')
 
     @staticmethod
     def get_buffer_size(data_buffer):
